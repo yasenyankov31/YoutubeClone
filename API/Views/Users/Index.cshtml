@@ -50,10 +50,10 @@
             @Html.DisplayFor(modelItem => item.Password)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ProfilePictureURL)
+            <img src="~/Photos/@item.ProfilePictureURL" class="img-rounded" width="304" height="236" alt="ProfilePicture">
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.BackgroundPictureURL)
+            <img src="~/Photos/@item.BackgroundPictureURL" class="img-rounded" width="304" height="236" alt="ProfilePicture">
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.PhoneNumber)

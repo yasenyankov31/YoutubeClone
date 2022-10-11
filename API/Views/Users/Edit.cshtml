@@ -7,10 +7,10 @@
 <h2>Edit</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>User</h4>
         <hr />
@@ -32,20 +32,25 @@
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div class="text-left">
+            <img src="~/Photos/@Model.ProfilePictureURL" class="img-thumbnail" width="304" height="236" alt="ProfilePicture">
+        </div>
         <div class="form-group">
+
             @Html.LabelFor(model => model.ProfilePictureURL, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ProfilePictureURL, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProfilePictureURL, "", new { @class = "text-danger" })
+                <input type="file" id="ProfilePicture" name="ProfilePicture" accept="image/png, image/jpeg">
+
             </div>
         </div>
-
+        <div class="text-left">
+            <img src="~/Photos/@Model.BackgroundPictureURL" class="img-thumbnail" width="304" height="236" alt="BackgroundPicture">
+        </div>
         <div class="form-group">
+
             @Html.LabelFor(model => model.BackgroundPictureURL, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BackgroundPictureURL, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.BackgroundPictureURL, "", new { @class = "text-danger" })
+                <input type="file" id="BackgroundPicture" name="BackgroundPicture" accept="image/png, image/jpeg">
             </div>
         </div>
 
@@ -73,21 +78,10 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Subscribers, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Subscribers, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Subscribers, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @Html.HiddenFor(model => model.ProfilePictureURL)
+        @Html.HiddenFor(model => model.BackgroundPictureURL)
+        @Html.HiddenFor(model => model.Subscribers)
+        @Html.HiddenFor(model => model.Role)
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

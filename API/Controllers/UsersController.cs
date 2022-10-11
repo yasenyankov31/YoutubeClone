@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using API.Models;
 using System.Web.Security;
+using System.IO;
 
 namespace API.Controllers
 {
@@ -17,6 +18,7 @@ namespace API.Controllers
         private YoutubeCloneEntities db = new YoutubeCloneEntities();
 
         // GET: Users
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Index()
         {
             return View(await db.Users.ToListAsync());
@@ -58,6 +60,7 @@ namespace API.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles ="Admin")]
         // GET: Users/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -84,8 +87,13 @@ namespace API.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user, 
+            HttpPostedFileBase ProfilePicture, HttpPostedFileBase BackgroundPicture)
         {
+            user.Subscribers = 0;
+            user.Role = "User";
+            user.ProfilePictureURL = SaveFile(ProfilePicture);
+            user.BackgroundPictureURL = SaveFile(BackgroundPicture);
             if (ModelState.IsValid)
             {
                 db.Users.Add(user);
@@ -97,6 +105,7 @@ namespace API.Controllers
         }
 
         // GET: Users/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,9 +124,20 @@ namespace API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user,
+            HttpPostedFileBase ProfilePicture, HttpPostedFileBase BackgroundPicture)
         {
+            if (ProfilePicture != null)
+            {
+                user.ProfilePictureURL = SaveFile(ProfilePicture);
+            }
+            if (BackgroundPicture != null)
+            {
+                user.BackgroundPictureURL = SaveFile(BackgroundPicture);
+            }
+
             if (ModelState.IsValid)
             {
                 db.Entry(user).State = EntityState.Modified;
@@ -128,6 +148,7 @@ namespace API.Controllers
         }
 
         // GET: Users/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -145,12 +166,26 @@ namespace API.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             User user = await db.Users.FindAsync(id);
             db.Users.Remove(user);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+        public string SaveFile(HttpPostedFileBase file)
+        {
+            string fileName = string.Empty;
+            if (file != null && file.ContentLength > 0)
+            {
+                // extract only the filename
+                fileName = Path.GetFileName(file.FileName);
+                // store the file inside ~/App_Data/uploads folder
+                var path = Path.Combine(Server.MapPath("~/Photos/"), fileName);
+                file.SaveAs(path);
+            }
+            return fileName;
         }
 
         protected override void Dispose(bool disposing)

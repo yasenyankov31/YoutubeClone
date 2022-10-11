@@ -31,6 +31,14 @@
           <Property Name="Edited" Type="bit" Nullable="false" />
           <Property Name="Date" Type="date" Nullable="false" />
         </EntityType>
+        <EntityType Name="Subscribers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CreatorId" Type="int" Nullable="false" />
+          <Property Name="SubsId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
@@ -87,6 +95,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Subscribers_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Subscribers" Type="Self.Subscribers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Subscribers">
+              <PropertyRef Name="SubsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Videos_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -104,6 +126,7 @@
         <EntityContainer Name="YoutubeCloneModelStoreContainer">
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Replies" EntityType="Self.Replies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subscribers" EntityType="Self.Subscribers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Videos" EntityType="Self.Videos" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Comments_Videos" Association="Self.FK_Comments_Videos">
@@ -113,6 +136,10 @@
           <AssociationSet Name="FK_Replies_Replies" Association="Self.FK_Replies_Replies">
             <End Role="Comments" EntitySet="Comments" />
             <End Role="Replies" EntitySet="Replies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Subscribers_Users" Association="Self.FK_Subscribers_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Subscribers" EntitySet="Subscribers" />
           </AssociationSet>
           <AssociationSet Name="FK_Videos_Users" Association="Self.FK_Videos_Users">
             <End Role="Users" EntitySet="Users" />
@@ -153,6 +180,15 @@
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Comment" Relationship="Self.FK_Replies_Replies" FromRole="Replies" ToRole="Comments" />
         </EntityType>
+        <EntityType Name="Subscriber">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreatorId" Type="Int32" Nullable="false" />
+          <Property Name="SubsId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Subscribers_Users" FromRole="Subscribers" ToRole="Users" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
@@ -167,6 +203,7 @@
           <Property Name="Location" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Subscribers" Type="Int32" Nullable="false" />
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Subscribers1" Relationship="Self.FK_Subscribers_Users" FromRole="Users" ToRole="Subscribers" />
           <NavigationProperty Name="Videos" Relationship="Self.FK_Videos_Users" FromRole="Users" ToRole="Videos" />
         </EntityType>
         <EntityType Name="Video">
@@ -212,6 +249,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Subscribers_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Subscribers" Type="Self.Subscriber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Subscribers">
+              <PropertyRef Name="SubsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Videos_Users">
           <End Role="Users" Type="Self.User" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -229,6 +280,7 @@
         <EntityContainer Name="YoutubeCloneEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Comments" EntityType="Self.Comment" />
           <EntitySet Name="Replies" EntityType="Self.Reply" />
+          <EntitySet Name="Subscribers" EntityType="Self.Subscriber" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="Videos" EntityType="Self.Video" />
           <AssociationSet Name="FK_Comments_Videos" Association="Self.FK_Comments_Videos">
@@ -238,6 +290,10 @@
           <AssociationSet Name="FK_Replies_Replies" Association="Self.FK_Replies_Replies">
             <End Role="Comments" EntitySet="Comments" />
             <End Role="Replies" EntitySet="Replies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Subscribers_Users" Association="Self.FK_Subscribers_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Subscribers" EntitySet="Subscribers" />
           </AssociationSet>
           <AssociationSet Name="FK_Videos_Users" Association="Self.FK_Videos_Users">
             <End Role="Users" EntitySet="Users" />
@@ -275,6 +331,15 @@
                 <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
                 <ScalarProperty Name="Edited" ColumnName="Edited" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subscribers">
+            <EntityTypeMapping TypeName="YoutubeCloneModel.Subscriber">
+              <MappingFragment StoreEntitySet="Subscribers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
+                <ScalarProperty Name="SubsId" ColumnName="SubsId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

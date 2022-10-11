@@ -86,4 +86,3 @@ C:\Users\Qska\source\repos\API\API\obj\Debug\API.csproj.CoreCompileInputs.cache
 C:\Users\Qska\source\repos\API\API\obj\Debug\API.csproj.CopyComplete
 C:\Users\Qska\source\repos\API\API\obj\Debug\API.dll
 C:\Users\Qska\source\repos\API\API\obj\Debug\API.pdb
-C:\Users\Qska\source\repos\API\API\obj\Debug\API.csproj.AssemblyReference.cache
