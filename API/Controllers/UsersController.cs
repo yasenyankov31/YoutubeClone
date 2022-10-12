@@ -129,6 +129,11 @@ namespace API.Controllers
         public async Task<ActionResult> Edit([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user,
             HttpPostedFileBase ProfilePicture, HttpPostedFileBase BackgroundPicture)
         {
+            YoutubeCloneEntities database = new YoutubeCloneEntities();
+            User userinfo = database.Users.Where(x => x.Id == user.Id).First();
+            user.Role = userinfo.Role;
+            user.Subscribers = userinfo.Subscribers;
+
             if (ProfilePicture != null)
             {
                 user.ProfilePictureURL = SaveFile(ProfilePicture);
