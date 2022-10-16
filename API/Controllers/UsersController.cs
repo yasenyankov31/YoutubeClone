@@ -187,7 +187,7 @@ namespace API.Controllers
                 // extract only the filename
                 fileName = Path.GetFileName(file.FileName);
                 // store the file inside ~/App_Data/uploads folder
-                var path = Path.Combine(Server.MapPath("~/Photos/"), fileName);
+                var path = Path.Combine(Server.MapPath("~/PhotoFiles/"), fileName);
                 file.SaveAs(path);
             }
             return fileName;
