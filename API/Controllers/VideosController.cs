@@ -21,6 +21,7 @@ namespace API.Controllers
         private string videoAddress = "~/VideoFiles";
 
         [HttpPost]
+        [Authorize]
         public string MultiUpload(string id, string fileName)
         {
             var chunkNumber = id;
@@ -39,6 +40,7 @@ namespace API.Controllers
             return "done";
         }
         [HttpPost]
+        [Authorize]
         public async Task<string> Create(string fileName, string complete,string  videoName, string description, HttpPostedFileBase thumbnail)
         {
 
@@ -59,7 +61,7 @@ namespace API.Controllers
             {
                 CreatorId = db.Users.Where(x => x.Username == User.Identity.Name).First().Id,
                 VideoName = videoName,
-                Description = HttpUtility.UrlDecode(description).Replace("<script>", "<sсript >"),
+                Description = HttpUtility.UrlDecode(description).Replace("script", "sсript"),
                 ThumbnailURL = SaveFile(thumbnail),
                 VideoURL = fileName
             };
@@ -67,7 +69,7 @@ namespace API.Controllers
             await db.SaveChangesAsync();
             return "success";
         }
-
+        [Authorize]
         private static void MergeFiles(string file1, string file2)
         {
             FileStream fs1 = null;
@@ -92,13 +94,16 @@ namespace API.Controllers
             }
         }
         // GET: Videos
+        [Authorize]
         public async Task<ActionResult> Index()
         {
-            var videos = db.Videos.Include(v => v.User);
+            int UserId = db.Users.Where(x => x.Username == User.Identity.Name).First().Id;
+            var videos = db.Videos.Where(x=>x.CreatorId==UserId);
             return View(await videos.ToListAsync());
         }
 
         // GET: Videos/Details/5
+        [Authorize]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -112,14 +117,14 @@ namespace API.Controllers
             }
             return View(video);
         }
-
+        [Authorize]
         // GET: Videos/Create
         public ActionResult Create()
         {
             return View();
         }
 
-
+        [Authorize]
         // GET: Videos/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
@@ -132,7 +137,6 @@ namespace API.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CreatorId = new SelectList(db.Users, "Id", "Username", video.CreatorId);
             return View(video);
         }
 
@@ -140,20 +144,51 @@ namespace API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,CreatorId,VideoName,Description,VideoURL,ThumbnailURL,Likes,Dislikes")] Video video)
+        [Authorize]
+        public async Task<string> Edit(int id,string fileName, string complete, string videoName, string description, HttpPostedFileBase thumbnail)
         {
-            if (ModelState.IsValid)
+            if (fileName!=null)
             {
-                db.Entry(video).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                string tempPath = Server.MapPath(videoAddress + "/Temp");
+                string videoPath = Server.MapPath(videoAddress);
+                string newPath = Path.Combine(tempPath, fileName);
+                if (complete == "1")
+                {
+                    string[] filePaths = Directory.GetFiles(tempPath).Where(p => p.Contains(fileName)).OrderBy(p => Int32.Parse(p.Replace(fileName, "$").Split('$')[1])).ToArray();
+                    foreach (string filePath in filePaths)
+                    {
+                        MergeFiles(newPath, filePath);
+                    }
+                }
+
+                System.IO.File.Move(Path.Combine(tempPath, fileName), Path.Combine(videoPath, fileName));
             }
-            ViewBag.CreatorId = new SelectList(db.Users, "Id", "Username", video.CreatorId);
-            return View(video);
+
+            Video video = await db.Videos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (videoName!=null)
+            {
+                video.VideoName = videoName;
+            }
+            if (description != null)
+            {
+                video.Description = HttpUtility.UrlDecode(description).Replace("script", "sсript");
+            }
+            if (thumbnail != null)
+            {
+                video.ThumbnailURL = SaveFile(thumbnail);
+            }
+            if (fileName != null)
+            {
+                video.VideoURL = fileName;
+            }
+            db.Entry(video).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+            return "success";
+
         }
 
         // GET: Videos/Delete/5
+        [Authorize]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,6 +206,7 @@ namespace API.Controllers
         // POST: Videos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Video video = await db.Videos.FindAsync(id);

@@ -221,6 +221,8 @@
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
       <LastGenOutput>DatabaseModel.cs</LastGenOutput>
     </Content>
+    <Content Include="PhotoFiles\DefaultPhotos\anonymousBackground.png" />
+    <Content Include="PhotoFiles\DefaultPhotos\anonymousProfile.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -250,6 +252,10 @@
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\createUser.js" />
+    <Content Include="Scripts\createVideo.js" />
+    <Content Include="Scripts\editUser.js" />
+    <Content Include="Scripts\editVideo.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -270,7 +276,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Register.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
@@ -284,7 +290,6 @@
     <Content Include="Views\Videos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="PhotoFiles\" />
     <Folder Include="VideoFiles\Temp\" />
   </ItemGroup>
   <ItemGroup>

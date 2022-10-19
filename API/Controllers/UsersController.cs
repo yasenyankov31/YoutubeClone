@@ -31,7 +31,7 @@ namespace API.Controllers
         [HttpPost]
         public ActionResult Login(User model,string returnUrl)
         {
-            var dataItem = db.Users.ToList().Where(x => x.Email == model.Email && x.Password == model.Password).First();
+            var dataItem = db.Users.ToList().Where(x => x.Email == model.Email && x.Password == model.Password).FirstOrDefault();
             if (dataItem!=null)
             {
                 FormsAuthentication.SetAuthCookie(dataItem.Username,false);
@@ -77,7 +77,7 @@ namespace API.Controllers
         }
 
         // GET: Users/Create
-        public ActionResult Create()
+        public ActionResult Register()
         {
             return View();
         }
@@ -87,7 +87,7 @@ namespace API.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user, 
+        public async Task<ActionResult> Register([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user, 
             HttpPostedFileBase ProfilePicture, HttpPostedFileBase BackgroundPicture)
         {
             user.Subscribers = 0;

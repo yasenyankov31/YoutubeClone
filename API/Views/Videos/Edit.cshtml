@@ -6,79 +6,47 @@
 
 <h2>Edit</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Video</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+<div class="form-horizontal">
+    <div class="form-group">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreatorId, "CreatorId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("CreatorId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CreatorId, "", new { @class = "text-danger" })
-            </div>
+        <div class="col-md-10">
+            <div class="hidden" id="VideoNameValidation"><h3 class="text-danger">Add video name!</h3></div>
+            <label>VideoName:</label>
+            <input type="text" id="VideoName" name="VideoName" value="@Model.VideoName" />
         </div>
+    </div>
+    <div class="form-group">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.VideoName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.VideoName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.VideoName, "", new { @class = "text-danger" })
-            </div>
+        <div class="col-md-10">
+            <div class="hidden" id="froala-editorValidation"><h3 class="text-danger">Add description!</h3></div>
+            <label>Description:</label>
+            <textarea id="froala-editor" name="description">@Model.Description</textarea>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <div class="hidden" id="ThumbnailValidation"><h3 class="text-danger">Add thumbnail!</h3></div>
+            <label>Thumbnail:</label>
+            <input type="file" id="Thumbnail" name="Thumbnail" value="@Model.ThumbnailURL" accept="image/png, image/jpeg" />
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.VideoURL, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.VideoURL, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.VideoURL, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ThumbnailURL, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ThumbnailURL, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ThumbnailURL, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Likes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Likes, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Likes, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Dislikes, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Dislikes, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Dislikes, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <div class="hidden" id="VideoInputValidation"><h3 class="text-danger">Add video!</h3></div>
+            <label>Filename:</label>
+            <div id="VideoDiv">
+                <input type="file" id="VideoInput" value="@Model.VideoURL" accept="video/mp4" /><br /><br />
+                <input type="button" id="btnUpload" value="Submit" /><br /><br />
+                <div id="progressbar_container" style="width: 100%; height: 30px; position: relative; background-color: grey; display: none">
+                    <div id="progressbar" style="width: 0%; height: 100%; position: absolute; background-color: green"></div>
+                    <span id="progressbar_label" style="position: absolute; left: 35%; top: 20%">Uploading...</span>
+                </div>
             </div>
         </div>
     </div>
-}
+
+</div>
+<script type="text/javascript" src="@Url.Content("/Scripts/editVideo.js")"></script>
 
 <div>
     @Html.ActionLink("Back to List", "Index")
