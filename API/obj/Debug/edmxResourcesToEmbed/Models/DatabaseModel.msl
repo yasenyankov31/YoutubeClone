@@ -12,6 +12,7 @@
           <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
           <ScalarProperty Name="Edited" ColumnName="Edited" />
           <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="ProfilePictureUrl" ColumnName="ProfilePictureUrl" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -26,12 +27,13 @@
           <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
           <ScalarProperty Name="Edited" ColumnName="Edited" />
           <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="ProfilePictureUrl" ColumnName="ProfilePictureUrl" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Subscribers">
       <EntityTypeMapping TypeName="YoutubeCloneModel.Subscriber">
-        <MappingFragment StoreEntitySet="Subscribers">
+        <MappingFragment StoreEntitySet="Subscriber">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
           <ScalarProperty Name="SubsId" ColumnName="SubsId" />

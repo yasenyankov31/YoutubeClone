@@ -4,15 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="8065967e29934fd79884189ec4641750" Name="Diagram1">
+      <Diagram DiagramId="f94a8107c13a41f7a3edf80d9d06c40d" Name="Diagram1">
         <EntityTypeShape EntityType="YoutubeCloneModel.Comment" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="YoutubeCloneModel.Reply" Width="1.5" PointX="7.5" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="YoutubeCloneModel.Subscriber" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="YoutubeCloneModel.User" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="YoutubeCloneModel.Video" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.User" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.Video" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
         <AssociationConnector Association="YoutubeCloneModel.FK_Comments_Videos" ManuallyRouted="false" />
         <AssociationConnector Association="YoutubeCloneModel.FK_Replies_Replies" ManuallyRouted="false" />
-        <AssociationConnector Association="YoutubeCloneModel.FK_Subscribers_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="YoutubeCloneModel.FK_Subscriber_Users" ManuallyRouted="false" />
         <AssociationConnector Association="YoutubeCloneModel.FK_Videos_Users" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>

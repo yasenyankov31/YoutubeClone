@@ -199,6 +199,7 @@
     <Compile Include="Models\Video.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\VideoAndComments.cs" />
     <Compile Include="MyRoleProvider\SiteRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

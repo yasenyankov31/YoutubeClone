@@ -22,6 +22,63 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
+        public async Task<string> CreateComment(int videoId,string content)
+        {
+            User user = db.Users.Where(x => x.Username == User.Identity.Name).First();
+            Comment comment = new Comment
+            {
+                VideoId = videoId,
+                CommentContent=content,
+                Username=user.Username,
+                ProfilePictureUrl=user.ProfilePictureURL,
+                Date=DateTime.Now
+            };
+            db.Comments.Add(comment);
+            await db.SaveChangesAsync();
+
+            return "success";
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<string> DeleteComment(int videoId)
+        {
+            Comment comment = await db.Comments.Where(x=>x.VideoId==videoId).FirstOrDefaultAsync();
+            try
+            {
+                db.Comments.Remove(comment);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                return "error"+ex;
+            }
+
+            return "success";
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<string> EditComment(int videoId,string newcomment)
+        {
+            Comment comment = await db.Comments.Where(x => x.VideoId == videoId).FirstOrDefaultAsync();
+            comment.CommentContent = newcomment;
+            try
+            {
+                db.Entry(comment).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                return "error" + ex;
+            }
+
+            return "success";
+        }
+
+        [HttpPost]
+        [Authorize]
         public string MultiUpload(string id, string fileName)
         {
             var chunkNumber = id;
@@ -41,7 +98,7 @@ namespace API.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<string> Create(string fileName, string complete,string  videoName, string description, HttpPostedFileBase thumbnail)
+        public async Task<string> Create(string fileName, string complete, string videoName, string description, HttpPostedFileBase thumbnail)
         {
 
             string tempPath = Server.MapPath(videoAddress + "/Temp");
@@ -55,7 +112,7 @@ namespace API.Controllers
                     MergeFiles(newPath, filePath);
                 }
             }
-            
+
             System.IO.File.Move(Path.Combine(tempPath, fileName), Path.Combine(videoPath, fileName));
             Video video = new Video
             {
@@ -98,10 +155,10 @@ namespace API.Controllers
         public async Task<ActionResult> Index()
         {
             int UserId = db.Users.Where(x => x.Username == User.Identity.Name).First().Id;
-            var videos = db.Videos.Where(x=>x.CreatorId==UserId);
+            var videos = db.Videos.Where(x => x.CreatorId == UserId);
             return View(await videos.ToListAsync());
         }
-
+ 
         // GET: Videos/Details/5
         [Authorize]
         public async Task<ActionResult> Details(int? id)
@@ -111,11 +168,18 @@ namespace API.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Video video = await db.Videos.FindAsync(id);
+            List<Comment> comments = await db.Comments.Where(x=>x.VideoId==video.Id).ToListAsync();
+            VideoAndComments videoAndComments = new VideoAndComments
+            {
+                comments = comments,
+                video=video
+            };
+
             if (video == null)
             {
                 return HttpNotFound();
             }
-            return View(video);
+            return View(videoAndComments);
         }
         [Authorize]
         // GET: Videos/Create
@@ -145,9 +209,9 @@ namespace API.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Authorize]
-        public async Task<string> Edit(int id,string fileName, string complete, string videoName, string description, HttpPostedFileBase thumbnail)
+        public async Task<string> Edit(int id, string fileName, string complete, string videoName, string description, HttpPostedFileBase thumbnail)
         {
-            if (fileName!=null)
+            if (fileName != null)
             {
                 string tempPath = Server.MapPath(videoAddress + "/Temp");
                 string videoPath = Server.MapPath(videoAddress);
@@ -165,7 +229,7 @@ namespace API.Controllers
             }
 
             Video video = await db.Videos.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if (videoName!=null)
+            if (videoName != null)
             {
                 video.VideoName = videoName;
             }

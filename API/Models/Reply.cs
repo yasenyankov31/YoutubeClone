@@ -22,6 +22,7 @@ namespace API.Models
         public int Dislikes { get; set; }
         public bool Edited { get; set; }
         public System.DateTime Date { get; set; }
+        public string ProfilePictureUrl { get; set; }
     
         public virtual Comment Comment { get; set; }
     }

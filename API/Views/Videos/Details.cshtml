@@ -1,4 +1,4 @@
-﻿@model API.Models.Video
+﻿@model API.Models.VideoAndComments
 
 @{
     ViewBag.Title = "Details";
@@ -11,53 +11,146 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.VideoName)
+            @Html.DisplayNameFor(model => model.video.VideoName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.VideoName)
+            @Html.DisplayFor(model => model.video.VideoName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.video.Description)
         </dt>
 
         <dd>
-            @Html.Raw(@Model.Description)
+            @Html.Raw(@Model.video.Description)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.VideoURL)
+            @Html.DisplayNameFor(model => model.video.VideoURL)
 
         </dt>
 
         <dd>
-            <video width="500" height="600" controls>
-                <source src="~/VideoFiles/@Model.VideoURL" type="video/mp4">
+            <video id="my-video"
+                   class="video-js"
+                   controls
+                   preload="auto"
+                   width="640"
+                   height="264"
+                   poster="~/PhotoFiles/@Model.video.ThumbnailURL"
+                   data-setup="{}">
+                <source src="~/VideoFiles/@Model.video.VideoURL" type="video/mp4" />
+                <source src="MY_VIDEO.webm" type="video/webm" />
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
             </video>
 
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Likes)
+            @Html.DisplayNameFor(model => model.video.Likes)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Likes)
+            @Html.DisplayFor(model => model.video.Likes)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Dislikes)
+            @Html.DisplayNameFor(model => model.video.Dislikes)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Dislikes)
+            @Html.DisplayFor(model => model.video.Dislikes)
+        </dd>
+        <dd>
+            <div class="form-group" id="form-body">
+                <img class="img-circle" style="margin-top:10px" id="ProfileImage" src="~/PhotoFiles/DefaultPhotos/anonymousProfile.png" height="50" width="50" data-holder-rendered="true">
+                <input type="text" id="comment" name="comment" placeholder="Add your comment..">
+
+                <input type="button" id="btnUpload" value="Submit" /><br /><br />
+            </div>
+            <ul class="list-unstyled">
+                @foreach (var item in Model.comments)
+                {
+                    <li>
+                        <div>
+
+                            <label>@item.Username</label>
+                            <img class="img-circle" style="margin-top:10px" id="ProfileImage" src="~/PhotoFiles/@item.ProfilePictureUrl" height="50" width="50" data-holder-rendered="true">
+                            @if (item.Edited)
+                            {
+                                <label>Edited</label>
+                            }
+                            
+                            @if (User.Identity.Name == item.Username)
+                            {
+                                <input type="text" id="newcomment" name="newcomment" value="@item.CommentContent">
+                                <button onclick="EditComment()">Edit</button>
+                                <button onclick="DeleteComment()">Del</button>
+                            }
+                            else
+                            {
+                                    <label>@item.CommentContent</label>
+                            }
+                        </div>
+                    </li>
+                }
+
+            </ul>
         </dd>
 
 
     </dl>
 </div>
+
+
+<script>
+    const videoId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+    function EditComment()
+    {
+        var formData = new FormData();
+        formData.append("newcomment",$("#newcomment").val());
+
+        var xhr2 = new XMLHttpRequest();
+        xhr2.onload = function () {
+            window.location = document.location.origin + '/Videos/Details/' + videoId;
+        }
+        xhr2.open("POST", "/Videos/EditComment?videoId=" + videoId, true);
+        xhr2.send(formData);
+    }
+    function DeleteComment() {
+        var xhr2 = new XMLHttpRequest();
+        xhr2.onload = function () {
+            window.location = document.location.origin + '/Videos/Details/' + videoId;
+        }
+        xhr2.open("POST", "/Videos/DeleteComment?videoId=" + videoId, true);
+        xhr2.send();
+    }
+
+    
+    $("#form-body").on("click", "#btnUpload", function () {
+        var formData = new FormData();
+        formData.append("content", $("#comment").val());
+
+        var xhr2 = new XMLHttpRequest();
+        xhr2.onload = function () {
+            window.location = document.location.origin + '/Videos/Details/' + videoId;
+        }
+        xhr2.open("POST", "/Videos/CreateComment?videoId=" + videoId, true);
+        xhr2.send(formData);
+    });
+
+
+</script>
+
+
+
+<script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.video.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

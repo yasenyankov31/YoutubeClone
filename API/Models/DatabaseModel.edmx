@@ -17,6 +17,7 @@
           <Property Name="Dislikes" Type="int" Nullable="false" />
           <Property Name="Edited" Type="bit" Nullable="false" />
           <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="ProfilePictureUrl" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Replies">
           <Key>
@@ -30,8 +31,9 @@
           <Property Name="Dislikes" Type="int" Nullable="false" />
           <Property Name="Edited" Type="bit" Nullable="false" />
           <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="ProfilePictureUrl" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
-        <EntityType Name="Subscribers">
+        <EntityType Name="Subscriber">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -95,16 +97,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Subscribers_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Subscribers" Type="Self.Subscribers" Multiplicity="*" />
+        <Association Name="FK_Subscriber_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Subscriber" Type="Self.Subscriber" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Subscribers">
+            <Dependent Role="Subscriber">
               <PropertyRef Name="SubsId" />
             </Dependent>
           </ReferentialConstraint>
@@ -126,7 +126,7 @@
         <EntityContainer Name="YoutubeCloneModelStoreContainer">
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Replies" EntityType="Self.Replies" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Subscribers" EntityType="Self.Subscribers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subscriber" EntityType="Self.Subscriber" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Videos" EntityType="Self.Videos" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Comments_Videos" Association="Self.FK_Comments_Videos">
@@ -137,9 +137,9 @@
             <End Role="Comments" EntitySet="Comments" />
             <End Role="Replies" EntitySet="Replies" />
           </AssociationSet>
-          <AssociationSet Name="FK_Subscribers_Users" Association="Self.FK_Subscribers_Users">
+          <AssociationSet Name="FK_Subscriber_Users" Association="Self.FK_Subscriber_Users">
             <End Role="Users" EntitySet="Users" />
-            <End Role="Subscribers" EntitySet="Subscribers" />
+            <End Role="Subscriber" EntitySet="Subscriber" />
           </AssociationSet>
           <AssociationSet Name="FK_Videos_Users" Association="Self.FK_Videos_Users">
             <End Role="Users" EntitySet="Users" />
@@ -163,6 +163,7 @@
           <Property Name="Dislikes" Type="Int32" Nullable="false" />
           <Property Name="Edited" Type="Boolean" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ProfilePictureUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Video" Relationship="Self.FK_Comments_Videos" FromRole="Comments" ToRole="Videos" />
           <NavigationProperty Name="Replies" Relationship="Self.FK_Replies_Replies" FromRole="Comments" ToRole="Replies" />
         </EntityType>
@@ -178,6 +179,7 @@
           <Property Name="Dislikes" Type="Int32" Nullable="false" />
           <Property Name="Edited" Type="Boolean" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ProfilePictureUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Comment" Relationship="Self.FK_Replies_Replies" FromRole="Replies" ToRole="Comments" />
         </EntityType>
         <EntityType Name="Subscriber">
@@ -187,7 +189,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CreatorId" Type="Int32" Nullable="false" />
           <Property Name="SubsId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Subscribers_Users" FromRole="Subscribers" ToRole="Users" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Subscriber_Users" FromRole="Subscriber" ToRole="Users" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -203,7 +205,7 @@
           <Property Name="Location" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Subscribers" Type="Int32" Nullable="false" />
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Subscribers1" Relationship="Self.FK_Subscribers_Users" FromRole="Users" ToRole="Subscribers" />
+          <NavigationProperty Name="Subscribers1" Relationship="Self.FK_Subscriber_Users" FromRole="Users" ToRole="Subscriber" />
           <NavigationProperty Name="Videos" Relationship="Self.FK_Videos_Users" FromRole="Users" ToRole="Videos" />
         </EntityType>
         <EntityType Name="Video">
@@ -249,16 +251,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Subscribers_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Subscribers" Type="Self.Subscriber" Multiplicity="*" />
+        <Association Name="FK_Subscriber_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Subscriber" Type="Self.Subscriber" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Subscribers">
+            <Dependent Role="Subscriber">
               <PropertyRef Name="SubsId" />
             </Dependent>
           </ReferentialConstraint>
@@ -291,9 +291,9 @@
             <End Role="Comments" EntitySet="Comments" />
             <End Role="Replies" EntitySet="Replies" />
           </AssociationSet>
-          <AssociationSet Name="FK_Subscribers_Users" Association="Self.FK_Subscribers_Users">
+          <AssociationSet Name="FK_Subscriber_Users" Association="Self.FK_Subscriber_Users">
             <End Role="Users" EntitySet="Users" />
-            <End Role="Subscribers" EntitySet="Subscribers" />
+            <End Role="Subscriber" EntitySet="Subscribers" />
           </AssociationSet>
           <AssociationSet Name="FK_Videos_Users" Association="Self.FK_Videos_Users">
             <End Role="Users" EntitySet="Users" />
@@ -317,6 +317,7 @@
                 <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
                 <ScalarProperty Name="Edited" ColumnName="Edited" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ProfilePictureUrl" ColumnName="ProfilePictureUrl" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -331,12 +332,13 @@
                 <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
                 <ScalarProperty Name="Edited" ColumnName="Edited" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ProfilePictureUrl" ColumnName="ProfilePictureUrl" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Subscribers">
             <EntityTypeMapping TypeName="YoutubeCloneModel.Subscriber">
-              <MappingFragment StoreEntitySet="Subscribers">
+              <MappingFragment StoreEntitySet="Subscriber">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
                 <ScalarProperty Name="SubsId" ColumnName="SubsId" />
