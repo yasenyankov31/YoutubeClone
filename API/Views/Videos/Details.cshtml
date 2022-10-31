@@ -1,154 +1,158 @@
-﻿@model API.Models.VideoAndComments
+﻿@model API.Models.VideoInfo
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.video.VideoName;
 }
 
-<h2>Details</h2>
+<div class="container">
+    <video id="my-video"
+           class="video-js"
+           controls
+           preload="auto"
+           width="640"
+           height="264"
+           poster="~/PhotoFiles/@Model.video.ThumbnailURL"
+           data-setup="{}">
+        <source src="~/VideoFiles/@Model.video.VideoURL" type="video/mp4" />
+        <source src="MY_VIDEO.webm" type="video/webm" />
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+    </video>
+    <div class="fw-bolder text-xxl-start" style="font-size:30px">
+        @Model.video.VideoName
+    </div>
+    <div class="fw-bolder text-xxl-start">
+        @Model.video.Views Views
+    </div>
+    <div class="buttons">
+        @{
+            if (Model.videold.Count == 0)
+            {
+                <div class="btn btn-dark" onclick="like(@Model.video.Id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                        <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
+                    </svg>
+                    @Model.video.Likes
+                </div>
+            }
+            for (int i = 0; i < Model.videold.Count; i++)
+            {
 
-<div>
-    <h4>Video</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.video.VideoName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.video.VideoName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.video.Description)
-        </dt>
-
-        <dd>
-            @Html.Raw(@Model.video.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.video.VideoURL)
-
-        </dt>
-
-        <dd>
-            <video id="my-video"
-                   class="video-js"
-                   controls
-                   preload="auto"
-                   width="640"
-                   height="264"
-                   poster="~/PhotoFiles/@Model.video.ThumbnailURL"
-                   data-setup="{}">
-                <source src="~/VideoFiles/@Model.video.VideoURL" type="video/mp4" />
-                <source src="MY_VIDEO.webm" type="video/webm" />
-                <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that
-                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                </p>
-            </video>
-
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.video.Likes)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.video.Likes)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.video.Dislikes)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.video.Dislikes)
-        </dd>
-        <dd>
-            <div class="form-group" id="form-body">
-                <img class="img-circle" style="margin-top:10px" id="ProfileImage" src="~/PhotoFiles/DefaultPhotos/anonymousProfile.png" height="50" width="50" data-holder-rendered="true">
-                <input type="text" id="comment" name="comment" placeholder="Add your comment..">
-
-                <input type="button" id="btnUpload" value="Submit" /><br /><br />
-            </div>
-            <ul class="list-unstyled">
-                @foreach (var item in Model.comments)
+                if (User.Identity.Name != Model.videold[i].Username)
                 {
-                    <li>
-                        <div>
-
-                            <label>@item.Username</label>
-                            <img class="img-circle" style="margin-top:10px" id="ProfileImage" src="~/PhotoFiles/@item.ProfilePictureUrl" height="50" width="50" data-holder-rendered="true">
-                            @if (item.Edited)
-                            {
-                                <label>Edited</label>
-                            }
-                            
-                            @if (User.Identity.Name == item.Username)
-                            {
-                                <input type="text" id="newcomment" name="newcomment" value="@item.CommentContent">
-                                <button onclick="EditComment()">Edit</button>
-                                <button onclick="DeleteComment()">Del</button>
-                            }
-                            else
-                            {
-                                    <label>@item.CommentContent</label>
-                            }
-                        </div>
-                    </li>
+                    <div class="btn btn-dark" onclick="like(@Model.video.Id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill"  viewBox="0 0 16 16">
+                            <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
+                        </svg>
+                        @Model.video.Likes
+                    </div>
+                    break;
                 }
+                else
+                {
+                    <div class="btn btn-dark" onclick="removelike(@Model.video.Id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" style="color: red;" viewBox="0 0 16 16">
+                            <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
+                        </svg>
+                        @Model.video.Likes
+                    </div>
+                    break;
+                }
+            }
+        }
 
-            </ul>
-        </dd>
 
+        <div class="btn btn-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-down-fill" viewBox="0 0 16 16">
+                <path d="M6.956 14.534c.065.936.952 1.659 1.908 1.42l.261-.065a1.378 1.378 0 0 0 1.012-.965c.22-.816.533-2.512.062-4.51.136.02.285.037.443.051.713.065 1.669.071 2.516-.211.518-.173.994-.68 1.2-1.272a1.896 1.896 0 0 0-.234-1.734c.058-.118.103-.242.138-.362.077-.27.113-.568.113-.856 0-.29-.036-.586-.113-.857a2.094 2.094 0 0 0-.16-.403c.169-.387.107-.82-.003-1.149a3.162 3.162 0 0 0-.488-.9c.054-.153.076-.313.076-.465a1.86 1.86 0 0 0-.253-.912C13.1.757 12.437.28 11.5.28H8c-.605 0-1.07.08-1.466.217a4.823 4.823 0 0 0-.97.485l-.048.029c-.504.308-.999.61-2.068.723C2.682 1.815 2 2.434 2 3.279v4c0 .851.685 1.433 1.357 1.616.849.232 1.574.787 2.132 1.41.56.626.914 1.28 1.039 1.638.199.575.356 1.54.428 2.591z" />
+            </svg>
+            @Model.video.Dislikes
+        </div>
+    </div>
 
-    </dl>
+    <div class="container" >
+        <div class="row">
+            <div class="col-1">
+                <img class="rounded-circle" style="margin-top:10px" id="ProfileImage" src="~/PhotoFiles/@Model.video.CreatorPhotoUrl" height="50" width="50" data-holder-rendered="true">
+            </div>
+            <div class="col-1">
+                <h5 class="fw-bold" style="margin-top:10px;margin-left:5px">@Model.video.CreatorName</h5>
+            </div>
+
+            <div class="col-2">
+                <div class="btn btn-danger m-2" style="margin:auto">Subscribe</div>
+            </div>
+        </div>
+
+    </div>
+    
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="form-group" id="form-body">
+            <img class="rounded-circle" style="margin-top:10px" id="ProfileImage" src="~/PhotoFiles/@ViewBag.ProfileUrl" height="50" width="50" data-holder-rendered="true">
+            <input type="text" id="comment" name="comment" placeholder="Add your comment..">
+
+            <input type="button" id="btnUpload" value="Submit" /><br /><br />
+        </div>
+    }
+
+    <ul class="list-unstyled">
+        @foreach (var item in Model.comments)
+        {
+            <li>
+                <div>
+
+                    <label>@item.Username</label>
+                    <img class="rounded-circle" style="margin-top:10px" id="ProfileImage" src="~/PhotoFiles/@item.ProfilePictureUrl" height="50" width="50" data-holder-rendered="true">
+                    @if (item.Edited)
+                    {
+                        <label>Edited</label>
+                    }
+
+                    @if (User.Identity.Name == item.Username)
+                    {
+                        <input type="text" id="newcomment" name="newcomment" value="@item.CommentContent">
+                        <button onclick="EditComment()">Edit</button>
+                        <button onclick="DeleteComment()">Del</button>
+                    }
+                    else
+                    {
+                        <label>@item.CommentContent</label>
+                    }
+                </div>
+            </li>
+        }
+
+    </ul>
 </div>
 
 
+
 <script>
-    const videoId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
-    function EditComment()
+
+    function like(videoId)
     {
-        var formData = new FormData();
-        formData.append("newcomment",$("#newcomment").val());
-
-        var xhr2 = new XMLHttpRequest();
-        xhr2.onload = function () {
-            window.location = document.location.origin + '/Videos/Details/' + videoId;
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", document.location.origin + '/Videos/LikeVideo?videoId=' + videoId, true);
+        xmlHttp.onload = function () {
+            window.location.href = document.location.origin + '/Videos/Details/' + videoId
         }
-        xhr2.open("POST", "/Videos/EditComment?videoId=" + videoId, true);
-        xhr2.send(formData);
+        xmlHttp.send();
     }
-    function DeleteComment() {
-        var xhr2 = new XMLHttpRequest();
-        xhr2.onload = function () {
-            window.location = document.location.origin + '/Videos/Details/' + videoId;
+    function removelike(videoId) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", document.location.origin + '/Videos/RemoveLike?videoId=' + videoId, true);
+        xmlHttp.onload = function () {
+            window.location.href = document.location.origin + '/Videos/Details/' + videoId
         }
-        xhr2.open("POST", "/Videos/DeleteComment?videoId=" + videoId, true);
-        xhr2.send();
+        xmlHttp.send();
     }
-
-    
-    $("#form-body").on("click", "#btnUpload", function () {
-        var formData = new FormData();
-        formData.append("content", $("#comment").val());
-
-        var xhr2 = new XMLHttpRequest();
-        xhr2.onload = function () {
-            window.location = document.location.origin + '/Videos/Details/' + videoId;
-        }
-        xhr2.open("POST", "/Videos/CreateComment?videoId=" + videoId, true);
-        xhr2.send(formData);
-    });
-
-
 </script>
-
-
-
+<script type="text/javascript" src="@Url.Content("/Scripts/detailsVideo.js")"></script>
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.video.Id }) |

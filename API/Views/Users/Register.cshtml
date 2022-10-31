@@ -14,7 +14,7 @@
             <div class="container-fluid" style="background-color:dimgray">
                 <div class="row">
                     <div class="col-md-2 col-sm-1">
-                        <img class="img-circle" style="margin-top:10px" id="ProfileImage" onclick="openProfileSelect()" src="~/PhotoFiles/DefaultPhotos/anonymousProfile.png" height="100" width="100" data-holder-rendered="true">
+                        <img class="rounded-circle" style="margin-top:10px" id="ProfileImage" onclick="openProfileSelect()" src="~/PhotoFiles/DefaultPhotos/anonymousProfile.png" height="100" width="100" data-holder-rendered="true">
                     </div>
 
                 </div>
@@ -24,7 +24,7 @@
 
     </div>
 
-    @using (Html.BeginForm("Create", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("Register", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -47,8 +47,8 @@
         </div>
     </div>
 
-    <input type="file" class="hidden" id="ProfileImageInput" name="ProfilePicture" accept="image/png, image/jpeg">
-    <input type="file" class="hidden" id="BackgroundImageInput" name="BackgroundPicture" accept="image/png, image/jpeg">
+    <input type="file" class="d-none" id="ProfileImageInput" name="ProfilePicture" accept="image/png, image/jpeg">
+    <input type="file" class="d-none" id="BackgroundImageInput" name="BackgroundPicture" accept="image/png, image/jpeg">
 
     <div class="form-group">
         @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })

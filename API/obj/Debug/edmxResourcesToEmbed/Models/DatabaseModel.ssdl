@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="YoutubeCloneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CommentLikesOrDislikes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CommentId" Type="int" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
   <EntityType Name="Comments">
     <Key>
       <PropertyRef Name="Id" />
@@ -19,16 +27,24 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="CommentId" Type="int" Nullable="false" />
     <Property Name="CommentContent" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="Likes" Type="int" Nullable="false" />
     <Property Name="Dislikes" Type="int" Nullable="false" />
     <Property Name="Edited" Type="bit" Nullable="false" />
     <Property Name="Date" Type="date" Nullable="false" />
     <Property Name="ProfilePictureUrl" Type="nvarchar" MaxLength="200" Nullable="false" />
   </EntityType>
-  <EntityType Name="Subscriber">
+  <EntityType Name="ReplyLikesOrDislikes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ReplyId" Type="int" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Subscribers">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -51,6 +67,14 @@
     <Property Name="Subscribers" Type="int" Nullable="false" />
     <Property Name="Role" Type="nvarchar" MaxLength="50" Nullable="false" />
   </EntityType>
+  <EntityType Name="VideoLikesOrDislikes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VideoId" Type="int" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
   <EntityType Name="Videos">
     <Key>
       <PropertyRef Name="Id" />
@@ -63,7 +87,25 @@
     <Property Name="ThumbnailURL" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="Likes" Type="int" Nullable="false" />
     <Property Name="Dislikes" Type="int" Nullable="false" />
+    <Property Name="Views" Type="int" Nullable="false" />
+    <Property Name="CreatorPhotoUrl" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="CreatorName" Type="nvarchar" MaxLength="200" Nullable="false" />
   </EntityType>
+  <Association Name="FK_CommentLikesOrDislikes_Comments">
+    <End Role="Comments" Type="Self.Comments" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="CommentLikesOrDislikes" Type="Self.CommentLikesOrDislikes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Comments">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CommentLikesOrDislikes">
+        <PropertyRef Name="CommentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Comments_Videos">
     <End Role="Videos" Type="Self.Videos" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -78,7 +120,21 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Replies_Replies">
+  <Association Name="FK_LikesOrDislikes_Videos">
+    <End Role="Videos" Type="Self.Videos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="VideoLikesOrDislikes" Type="Self.VideoLikesOrDislikes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Videos">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VideoLikesOrDislikes">
+        <PropertyRef Name="VideoId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Replies_Comments">
     <End Role="Comments" Type="Self.Comments" Multiplicity="1">
       <OnDelete Action="Cascade" />
     </End>
@@ -92,14 +148,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Subscriber_Users">
-    <End Role="Users" Type="Self.Users" Multiplicity="1" />
-    <End Role="Subscriber" Type="Self.Subscriber" Multiplicity="*" />
+  <Association Name="FK_ReplyLikesOrDislikes_Replies">
+    <End Role="Replies" Type="Self.Replies" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ReplyLikesOrDislikes" Type="Self.ReplyLikesOrDislikes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Replies">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ReplyLikesOrDislikes">
+        <PropertyRef Name="ReplyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Subscribers_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Subscribers" Type="Self.Subscribers" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Users">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="Subscriber">
+      <Dependent Role="Subscribers">
         <PropertyRef Name="SubsId" />
       </Dependent>
     </ReferentialConstraint>
@@ -118,27 +190,58 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Videos_Videos">
+    <End Role="Videos" Type="Self.Videos" Multiplicity="1" />
+    <End Role="Videos1" Type="Self.Videos" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Videos">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Videos1">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="YoutubeCloneModelStoreContainer">
+    <EntitySet Name="CommentLikesOrDislikes" EntityType="Self.CommentLikesOrDislikes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Replies" EntityType="Self.Replies" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="Subscriber" EntityType="Self.Subscriber" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ReplyLikesOrDislikes" EntityType="Self.ReplyLikesOrDislikes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Subscribers" EntityType="Self.Subscribers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VideoLikesOrDislikes" EntityType="Self.VideoLikesOrDislikes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Videos" EntityType="Self.Videos" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CommentLikesOrDislikes_Comments" Association="Self.FK_CommentLikesOrDislikes_Comments">
+      <End Role="Comments" EntitySet="Comments" />
+      <End Role="CommentLikesOrDislikes" EntitySet="CommentLikesOrDislikes" />
+    </AssociationSet>
     <AssociationSet Name="FK_Comments_Videos" Association="Self.FK_Comments_Videos">
       <End Role="Videos" EntitySet="Videos" />
       <End Role="Comments" EntitySet="Comments" />
     </AssociationSet>
-    <AssociationSet Name="FK_Replies_Replies" Association="Self.FK_Replies_Replies">
+    <AssociationSet Name="FK_LikesOrDislikes_Videos" Association="Self.FK_LikesOrDislikes_Videos">
+      <End Role="Videos" EntitySet="Videos" />
+      <End Role="VideoLikesOrDislikes" EntitySet="VideoLikesOrDislikes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Replies_Comments" Association="Self.FK_Replies_Comments">
       <End Role="Comments" EntitySet="Comments" />
       <End Role="Replies" EntitySet="Replies" />
     </AssociationSet>
-    <AssociationSet Name="FK_Subscriber_Users" Association="Self.FK_Subscriber_Users">
+    <AssociationSet Name="FK_ReplyLikesOrDislikes_Replies" Association="Self.FK_ReplyLikesOrDislikes_Replies">
+      <End Role="Replies" EntitySet="Replies" />
+      <End Role="ReplyLikesOrDislikes" EntitySet="ReplyLikesOrDislikes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Subscribers_Users" Association="Self.FK_Subscribers_Users">
       <End Role="Users" EntitySet="Users" />
-      <End Role="Subscriber" EntitySet="Subscriber" />
+      <End Role="Subscribers" EntitySet="Subscribers" />
     </AssociationSet>
     <AssociationSet Name="FK_Videos_Users" Association="Self.FK_Videos_Users">
       <End Role="Users" EntitySet="Users" />
       <End Role="Videos" EntitySet="Videos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Videos_Videos" Association="Self.FK_Videos_Videos">
+      <End Role="Videos" EntitySet="Videos" />
+      <End Role="Videos1" EntitySet="Videos" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

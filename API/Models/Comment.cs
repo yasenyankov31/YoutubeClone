@@ -17,6 +17,7 @@ namespace API.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Comment()
         {
+            this.CommentLikesOrDislikes = new HashSet<CommentLikesOrDislike>();
             this.Replies = new HashSet<Reply>();
         }
     
@@ -30,6 +31,8 @@ namespace API.Models
         public System.DateTime Date { get; set; }
         public string ProfilePictureUrl { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CommentLikesOrDislike> CommentLikesOrDislikes { get; set; }
         public virtual Video Video { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Reply> Replies { get; set; }

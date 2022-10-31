@@ -4,15 +4,16 @@
     ViewBag.Title = "Details";
 }
 
-<div>
 
+
+<div>
     <div class="container-fluid ">
         <div class="container " style="background-image: url(/PhotoFiles/@Model.BackgroundPictureURL);height:200px">
         </div>
         <div class="container" style="background-color: dimgray">
             <div class="row">
                 <div class="col-md-2 col-sm-1">
-                    <img class="img-circle" style="margin-top:10px" src="~/PhotoFiles/@Model.ProfilePictureURL" height="100" width="100" data-holder-rendered="true">
+                    <img class="rounded-circle" style="margin-top:10px" src="~/PhotoFiles/@Model.ProfilePictureURL" height="100" width="100" data-holder-rendered="true">
                 </div>
                 <div class="col-md-4 col-sm-3" style="padding:20px">
                     <h2 style="color:white">@Model.Username</h2>
@@ -22,11 +23,20 @@
 
                 </div>
                 <div class="col-md-2 col-sm-1" style="margin-top:40px;">
-                    <button class="btn-danger" style="padding: 15px">Subscribe</button>
+                    @if (User.Identity.Name != Model.Username)
+                    {
+                        <div class=" btn btn-danger" style="padding: 15px">Subscribe</div>
+                    }
                 </div>
             </div>
         </div>
+
     </div>
 
-   
+
 </div>
+<script>
+    $("#edit").click(() => {
+        window.location.href = document.location.origin + '/Users/Edit'
+    });
+</script>

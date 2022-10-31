@@ -20,6 +20,39 @@ namespace API.Controllers
         private YoutubeCloneEntities db = new YoutubeCloneEntities();
         private string videoAddress = "~/VideoFiles";
 
+        [HttpGet]
+        [Authorize]
+        public async Task<string> LikeVideo(int videoId)
+        {
+            Video video =await db.Videos.FindAsync(videoId);
+            video.Likes++;
+            db.Entry(video).State = EntityState.Modified;
+            VideoLikesOrDislike vidlikes = new VideoLikesOrDislike
+            {
+
+                VideoId=videoId,
+                Username = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Username
+
+            };
+            db.VideoLikesOrDislikes.Add(vidlikes);
+            await db.SaveChangesAsync();
+
+            return "success";
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<string> RemoveLike(int videoId)
+        {
+            Video video = await db.Videos.FindAsync(videoId);
+            video.Likes--;
+            db.Entry(video).State = EntityState.Modified;
+            VideoLikesOrDislike videoLikes = db.VideoLikesOrDislikes.Where(x => x.Username == User.Identity.Name && x.VideoId == videoId).FirstOrDefault();
+            db.VideoLikesOrDislikes.Remove(videoLikes);
+            await db.SaveChangesAsync();
+
+            return "success";
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<string> CreateComment(int videoId,string content)
@@ -112,16 +145,20 @@ namespace API.Controllers
                     MergeFiles(newPath, filePath);
                 }
             }
-
+            User CreatorInfo = db.Users.Where(x => x.Username == User.Identity.Name).First();
             System.IO.File.Move(Path.Combine(tempPath, fileName), Path.Combine(videoPath, fileName));
             Video video = new Video
             {
-                CreatorId = db.Users.Where(x => x.Username == User.Identity.Name).First().Id,
+                CreatorId = CreatorInfo.Id,
                 VideoName = videoName,
                 Description = HttpUtility.UrlDecode(description).Replace("script", "sсript"),
                 ThumbnailURL = SaveFile(thumbnail),
-                VideoURL = fileName
+                VideoURL = fileName,
+                DateCreated=DateTime.Now,
+                CreatorPhotoUrl=CreatorInfo.ProfilePictureURL,
+                CreatorName=CreatorInfo.Username
             };
+            
             db.Videos.Add(video);
             await db.SaveChangesAsync();
             return "success";
@@ -160,21 +197,34 @@ namespace API.Controllers
         }
  
         // GET: Videos/Details/5
-        [Authorize]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            if (!User.Identity.IsAuthenticated)
+            {
+                ViewBag.ProfileUrl = "/DefaultPhotos/anonymousProfile.png";
+            }
+            else
+            {
+                ViewBag.ProfileUrl = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().ProfilePictureURL;
+            }
+            
             Video video = await db.Videos.FindAsync(id);
+            video.Views += 1;
+            db.Entry(video).State = EntityState.Modified;
+            await db.SaveChangesAsync();
             List<Comment> comments = await db.Comments.Where(x=>x.VideoId==video.Id).ToListAsync();
-            VideoAndComments videoAndComments = new VideoAndComments
+            List<VideoLikesOrDislike> videold = await db.VideoLikesOrDislikes.Where(x => x.VideoId == video.Id).ToListAsync();
+            VideoInfo videoAndComments = new VideoInfo
             {
                 comments = comments,
-                video=video
+                video=video,
+                videold= videold
             };
-
+            
             if (video == null)
             {
                 return HttpNotFound();
@@ -187,8 +237,14 @@ namespace API.Controllers
         {
             return View();
         }
+        public async Task<ActionResult> AllVideos()
+        {
 
-        [Authorize]
+            return View(await db.Videos.ToListAsync());
+        }
+        
+
+       [Authorize]
         // GET: Videos/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
@@ -228,7 +284,7 @@ namespace API.Controllers
                 System.IO.File.Move(Path.Combine(tempPath, fileName), Path.Combine(videoPath, fileName));
             }
 
-            Video video = await db.Videos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            Video video = await db.Videos.FindAsync(id);
             if (videoName != null)
             {
                 video.VideoName = videoName;

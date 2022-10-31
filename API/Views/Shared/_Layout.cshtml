@@ -4,41 +4,37 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 </head>
 
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                @Html.ActionLink("Youtube Clone", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            @Html.ActionLink("Videos", "AllVideos", "Videos", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    </ul>
+                    <form class="d-flex pt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    @Html.Partial("_LoginPartial")
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, null)</li>
-                    }
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li>@Html.ActionLink("My Videos", "Index", "Videos", new { area = "" }, new { id = "Videos" })</li>
-                    }
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
-        </div>
+        </nav>
     </div>
+    
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -47,32 +43,12 @@
         </footer>
     </div>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js"></script>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+   
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.bundle.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
 <script>
-
-    var $table = $('#table')
-    var deleteButton = $('.btn-danger')
-
-    $(function () {
-        deleteButton.click(function () {
-            url = decodeURIComponent(this.href);
-            let data = $table.bootstrapTable('getSelections')
-            var ids = "";
-            data.forEach((item) => {
-                ids += item._id + ","
-            })
-            $('.btn-danger').attr('href', url.replace('{0}', ids))
-        })
-    })
-
-
     new FroalaEditor('textarea#froala-editor')
-
 </script>

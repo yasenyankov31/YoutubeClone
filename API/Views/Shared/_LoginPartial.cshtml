@@ -5,22 +5,36 @@
     {
         @Html.AntiForgeryToken()
 
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                @if (User.IsInRole("Admin"))
-                {
-                    @Html.ActionLink("Hello " + User.Identity.Name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-                }
-
+        <ul class=" navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+                <img role="button" data-bs-toggle="dropdown" aria-expanded="false" id="ProfilePicture" class="rounded-circle nav-link dropdown-toggle" width="60" height="60" alt="ProfilePicture" />
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("My Profile", "Edit", "Users", new { area = "" }, new { @class = "dropdown-item" })</li>
+                    <li>@Html.ActionLink("My Videos", "Index", "Videos", new { area = "" }, new { @class = "dropdown-item" })</li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, new { @class = "dropdown-item" })</li>
+                    }
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-item"><button class="btn btn-dark" id="logout">Log off</button></li>
+                </ul>
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-        </ul> 
+
+        </ul>
     }
+    <script>
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", document.location.origin + '/Users/GetUserPhoto');
+        xmlHttp.onload = function () {
+            $("#ProfilePicture").attr("src", "/PhotoFiles/" + xmlHttp.responseText);
+        }
+        xmlHttp.send(null);
+    </script>
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Users", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Users", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    <ul class=" navbar-nav navbar-right">
+        <li class="nav-link">@Html.ActionLink("Register", "Register", "Users", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li class="nav-link">@Html.ActionLink("Log in", "Login", "Users", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>
 }

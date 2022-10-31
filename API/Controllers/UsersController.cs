@@ -31,10 +31,16 @@ namespace API.Controllers
         [HttpPost]
         public ActionResult Login(User model,string returnUrl)
         {
-            var dataItem = db.Users.ToList().Where(x => x.Email == model.Email && x.Password == model.Password).FirstOrDefault();
+            var dataItem = db.Users.ToList().Where(x => x.Username == model.Username && x.Password == model.Password).FirstOrDefault();
             if (dataItem!=null)
             {
-                FormsAuthentication.SetAuthCookie(dataItem.Username,false);
+
+                FormsAuthentication.SetAuthCookie(dataItem.Username, false);
+                if (!User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Index", "Home");
+
+                }
                 if (Url.IsLocalUrl(returnUrl) && returnUrl.Length>1 && returnUrl.StartsWith("/")
                     && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                 {
@@ -52,6 +58,16 @@ namespace API.Controllers
             }
            
         }
+        public async Task<string> GetUserPhoto()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = await db.Users.Where(x=>x.Username ==User.Identity.Name).FirstOrDefaultAsync();
+                return user.ProfilePictureURL;
+            }
+            return "none";
+        
+        }
         [Authorize]
         [AllowAnonymous]
         public ActionResult SignOut()
@@ -60,20 +76,34 @@ namespace API.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize]
         // GET: Users/Details/5
         public async Task<ActionResult> Details(int? id)
-        {
-            if (id == null)
+        {            
+            if (User.IsInRole("Admin"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    id = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Id;
+                }
+                User user = await db.Users.FindAsync(id);
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(user);
             }
-            User user = await db.Users.FindAsync(id);
-            if (user == null)
+            else
             {
-                return HttpNotFound();
+                id = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Id;
+                User user = await db.Users.FindAsync(id);
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(user);
             }
-            return View(user);
+
         }
 
         // GET: Users/Create
@@ -85,6 +115,14 @@ namespace API.Controllers
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
+        private static Random random = new Random();
+        public static string RandomName(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user, 
@@ -92,8 +130,17 @@ namespace API.Controllers
         {
             user.Subscribers = 0;
             user.Role = "User";
+
             user.ProfilePictureURL = SaveFile(ProfilePicture);
             user.BackgroundPictureURL = SaveFile(BackgroundPicture);
+            if (ProfilePicture == null)
+            {
+                user.ProfilePictureURL = "/DefaultPhotos/anonymousProfile.png";
+            }
+            if (BackgroundPicture == null)
+            {
+                user.BackgroundPictureURL = "/DefaultPhotos/anonymousBackground.png";
+            }
             if (ModelState.IsValid)
             {
                 db.Users.Add(user);
@@ -105,49 +152,67 @@ namespace API.Controllers
         }
 
         // GET: Users/Edit/5
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (User.IsInRole("Admin"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    id = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Id;
+                }
+                User user = await db.Users.FindAsync(id);
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(user);
             }
-            User user = await db.Users.FindAsync(id);
-            if (user == null)
+            else
             {
-                return HttpNotFound();
+                id = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Id;
+                User user = await db.Users.FindAsync(id);
+
+                return View(user);
             }
-            return View(user);
+
         }
 
         // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Username,Password,ProfilePictureURL,BackgroundPictureURL,PhoneNumber,Email,Location,Subscribers,Role")] User user,
             HttpPostedFileBase ProfilePicture, HttpPostedFileBase BackgroundPicture)
         {
             YoutubeCloneEntities database = new YoutubeCloneEntities();
-            User userinfo = database.Users.Where(x => x.Id == user.Id).First();
+            User userinfo =await database.Users.FindAsync(user.Id);
             user.Role = userinfo.Role;
             user.Subscribers = userinfo.Subscribers;
 
             if (ProfilePicture != null)
             {
                 user.ProfilePictureURL = SaveFile(ProfilePicture);
+                db.Videos.Where(x => x.CreatorId == user.Id).ToList().ForEach(x => x.CreatorPhotoUrl = user.ProfilePictureURL);
+                db.Comments.Where(x => x.Username == user.Username).ToList().ForEach(x => x.ProfilePictureUrl = user.ProfilePictureURL);
             }
             if (BackgroundPicture != null)
             {
                 user.BackgroundPictureURL = SaveFile(BackgroundPicture);
+            }
+            if (user.Username!=""&&user.Username!=userinfo.Username)
+            {
+                FormsAuthentication.SetAuthCookie(user.Username, false);
+                db.Videos.Where(x => x.CreatorId == user.Id).ToList().ForEach(x => x.CreatorName = user.Username);
             }
 
             if (ModelState.IsValid)
             {
                 db.Entry(user).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit");
             }
             return View(user);
         }
@@ -181,13 +246,11 @@ namespace API.Controllers
         }
         public string SaveFile(HttpPostedFileBase file)
         {
-            string fileName = string.Empty;
+            string fileName = RandomName(8) + ".png";
             if (file != null && file.ContentLength > 0)
             {
-                // extract only the filename
-                fileName = Path.GetFileName(file.FileName);
                 // store the file inside ~/App_Data/uploads folder
-                var path = Path.Combine(Server.MapPath("~/PhotoFiles/"), fileName);
+                var path = Path.Combine(Server.MapPath("~/PhotoFiles/"),fileName);
                 file.SaveAs(path);
             }
             return fileName;

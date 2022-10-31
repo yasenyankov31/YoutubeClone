@@ -18,6 +18,7 @@ namespace API.Models
         public Video()
         {
             this.Comments = new HashSet<Comment>();
+            this.VideoLikesOrDislikes = new HashSet<VideoLikesOrDislike>();
         }
     
         public int Id { get; set; }
@@ -28,9 +29,17 @@ namespace API.Models
         public string ThumbnailURL { get; set; }
         public int Likes { get; set; }
         public int Dislikes { get; set; }
+        public int Views { get; set; }
+        public string CreatorPhotoUrl { get; set; }
+        public System.DateTime DateCreated { get; set; }
+        public string CreatorName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<VideoLikesOrDislike> VideoLikesOrDislikes { get; set; }
+        public virtual Video Videos1 { get; set; }
+        public virtual Video Video1 { get; set; }
     }
 }

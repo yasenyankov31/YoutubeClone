@@ -81,11 +81,11 @@ $("#VideoDiv").on("click", "#btnUpload", function () {
     var formdata = [$("#VideoName"), $("#froala-editor"), $("#Thumbnail"), $("#VideoInput")]
     for (const x of formdata) {
         if (x.val() === "") {
-            $("#" + x.attr("id") + "Validation").removeClass("hidden")
+            $("#" + x.attr("id") + "Validation").removeClass("d-none")
             interupt = true;
         }
         else {
-            $("#" + x.attr("id") + "Validation").addClass("hidden")
+            $("#" + x.attr("id") + "Validation").addClass("d-none")
         }
     }
     if (!interupt) {

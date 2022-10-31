@@ -14,10 +14,16 @@ namespace API.Models
     
     public partial class Reply
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Reply()
+        {
+            this.ReplyLikesOrDislikes = new HashSet<ReplyLikesOrDislike>();
+        }
+    
         public int Id { get; set; }
-        public string Username { get; set; }
         public int CommentId { get; set; }
         public string CommentContent { get; set; }
+        public string Username { get; set; }
         public int Likes { get; set; }
         public int Dislikes { get; set; }
         public bool Edited { get; set; }
@@ -25,5 +31,7 @@ namespace API.Models
         public string ProfilePictureUrl { get; set; }
     
         public virtual Comment Comment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReplyLikesOrDislike> ReplyLikesOrDislikes { get; set; }
     }
 }

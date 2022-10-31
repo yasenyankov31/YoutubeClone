@@ -175,7 +175,6 @@ D:\Programirane\YoutubeClone\API\obj\Debug\API.csproj.CoreCompileInputs.cache
 D:\Programirane\YoutubeClone\API\obj\Debug\API.csproj.CopyComplete
 D:\Programirane\YoutubeClone\API\obj\Debug\API.dll
 D:\Programirane\YoutubeClone\API\obj\Debug\API.pdb
-D:\Programirane\YoutubeClone\API\obj\Debug\API.csproj.AssemblyReference.cache
 E:\YoutubeClone\API\bin\API.dll.config
 E:\YoutubeClone\API\bin\API.dll
 E:\YoutubeClone\API\bin\API.pdb
@@ -265,3 +264,4 @@ E:\YoutubeClone\API\obj\Debug\API.csproj.CopyComplete
 E:\YoutubeClone\API\obj\Debug\API.dll
 E:\YoutubeClone\API\obj\Debug\API.pdb
 E:\YoutubeClone\API\obj\Debug\API.csproj.AssemblyReference.cache
+D:\Programirane\YoutubeClone\API\obj\Debug\API.csproj.AssemblyReference.cache
