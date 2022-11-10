@@ -201,6 +201,7 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserSubs.cs" />
     <Compile Include="Models\Video.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
@@ -285,6 +286,7 @@
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
+    <Content Include="Scripts\Subs.js" />
     <Content Include="VideoFiles\oPr3yl6bsw.mp4" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

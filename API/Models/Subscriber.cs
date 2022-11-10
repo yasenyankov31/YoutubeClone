@@ -16,7 +16,7 @@ namespace API.Models
     {
         public int Id { get; set; }
         public int CreatorId { get; set; }
-        public int SubsId { get; set; }
+        public string Username { get; set; }
     
         public virtual User User { get; set; }
     }

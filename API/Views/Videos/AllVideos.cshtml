@@ -43,7 +43,7 @@
         var dateString = element.innerHTML.split(" ");
         var startDate = new Date(dateString[2], dateString[1], dateString[0], dateString[3], dateString[4], dateString[5]);
         var endDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, todayDate.getDate(), todayDate.getHours(), todayDate.getMinutes(), todayDate.getSeconds())
-        var seconds = Math.round((endDate.getTime() - startDate.getTime()) / 1000);
+        var seconds = Math.abs(Math.round((endDate.getTime() - startDate.getTime()) / 1000));
 
         var minute = Math.round(seconds / 60);
         var hour = Math.round(seconds / 3600);

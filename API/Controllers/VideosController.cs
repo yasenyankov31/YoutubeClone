@@ -24,14 +24,22 @@ namespace API.Controllers
         [Authorize]
         public async Task<string> LikeVideo(int videoId)
         {
-            Video video =await db.Videos.FindAsync(videoId);
+            Video video = await db.Videos.FindAsync(videoId);
+            VideoLikesOrDislike isdisliked = db.VideoLikesOrDislikes.Where(x => x.Username == User.Identity.Name && x.VideoId == videoId && !x.LikeOrDislike).FirstOrDefault();
+            if (isdisliked != null)
+            {
+                video.Dislikes--;
+                db.VideoLikesOrDislikes.Remove(isdisliked);
+            }
+           
             video.Likes++;
             db.Entry(video).State = EntityState.Modified;
             VideoLikesOrDislike vidlikes = new VideoLikesOrDislike
             {
 
                 VideoId=videoId,
-                Username = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Username
+                Username = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Username,
+                LikeOrDislike=true
 
             };
             db.VideoLikesOrDislikes.Add(vidlikes);
@@ -46,7 +54,47 @@ namespace API.Controllers
             Video video = await db.Videos.FindAsync(videoId);
             video.Likes--;
             db.Entry(video).State = EntityState.Modified;
-            VideoLikesOrDislike videoLikes = db.VideoLikesOrDislikes.Where(x => x.Username == User.Identity.Name && x.VideoId == videoId).FirstOrDefault();
+            VideoLikesOrDislike videoLikes = db.VideoLikesOrDislikes.Where(x => x.Username == User.Identity.Name && x.VideoId == videoId&&x.LikeOrDislike).FirstOrDefault();
+            db.VideoLikesOrDislikes.Remove(videoLikes);
+            await db.SaveChangesAsync();
+
+            return "success";
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<string> DislikeVideo(int videoId)
+        {
+            Video video = await db.Videos.FindAsync(videoId);
+            VideoLikesOrDislike isliked = db.VideoLikesOrDislikes.Where(x => x.Username == User.Identity.Name && x.VideoId == videoId && x.LikeOrDislike).FirstOrDefault();
+            if (isliked != null)
+            {
+                video.Likes--;
+                db.VideoLikesOrDislikes.Remove(isliked);
+            }
+            
+            video.Dislikes++;
+            db.Entry(video).State = EntityState.Modified;
+            VideoLikesOrDislike vidlikes = new VideoLikesOrDislike
+            {
+
+                VideoId = videoId,
+                Username = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Username,
+                LikeOrDislike = false
+
+            };
+            db.VideoLikesOrDislikes.Add(vidlikes);
+            await db.SaveChangesAsync();
+
+            return "success";
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<string> RemoveDislike(int videoId)
+        {
+            Video video = await db.Videos.FindAsync(videoId);
+            video.Dislikes--;
+            db.Entry(video).State = EntityState.Modified;
+            VideoLikesOrDislike videoLikes = db.VideoLikesOrDislikes.Where(x => x.Username == User.Identity.Name && x.VideoId == videoId &&!x.LikeOrDislike).FirstOrDefault();
             db.VideoLikesOrDislikes.Remove(videoLikes);
             await db.SaveChangesAsync();
 
@@ -224,6 +272,12 @@ namespace API.Controllers
                 video=video,
                 videold= videold
             };
+            ViewBag.isSubed = "";
+            if (db.Subscribers.Where(x => x.Username == User.Identity.Name).FirstOrDefault()!=null)
+            {
+                ViewBag.isSubed ="full";
+            }
+           
             
             if (video == null)
             {

@@ -7,6 +7,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="CommentId" ColumnName="CommentId" />
           <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="LikeOrDislike" ColumnName="LikeOrDislike" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -54,7 +55,7 @@
         <MappingFragment StoreEntitySet="Subscribers">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
-          <ScalarProperty Name="SubsId" ColumnName="SubsId" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -80,6 +81,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="VideoId" ColumnName="VideoId" />
           <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="LikeOrDislike" ColumnName="LikeOrDislike" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

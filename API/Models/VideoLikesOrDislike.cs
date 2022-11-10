@@ -17,6 +17,7 @@ namespace API.Models
         public int Id { get; set; }
         public int VideoId { get; set; }
         public string Username { get; set; }
+        public bool LikeOrDislike { get; set; }
     
         public virtual Video Video { get; set; }
     }

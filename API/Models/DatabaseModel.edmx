@@ -12,6 +12,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CommentId" Type="int" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="LikeOrDislike" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Comments">
           <Key>
@@ -55,13 +56,13 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CreatorId" Type="int" Nullable="false" />
-          <Property Name="SubsId" Type="int" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="ProfilePictureURL" Type="nvarchar" MaxLength="200" Nullable="false" />
@@ -79,6 +80,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="VideoId" Type="int" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="LikeOrDislike" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Videos">
           <Key>
@@ -177,7 +179,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Subscribers">
-              <PropertyRef Name="SubsId" />
+              <PropertyRef Name="CreatorId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -261,6 +263,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CommentId" Type="Int32" Nullable="false" />
           <Property Name="Username" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LikeOrDislike" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Comment" Relationship="Self.FK_CommentLikesOrDislikes_Comments" FromRole="CommentLikesOrDislikes" ToRole="Comments" />
         </EntityType>
         <EntityType Name="Comment">
@@ -311,14 +314,14 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CreatorId" Type="Int32" Nullable="false" />
-          <Property Name="SubsId" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_Subscribers_Users" FromRole="Subscribers" ToRole="Users" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="Username" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProfilePictureURL" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
@@ -338,6 +341,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="VideoId" Type="Int32" Nullable="false" />
           <Property Name="Username" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LikeOrDislike" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Video" Relationship="Self.FK_LikesOrDislikes_Videos" FromRole="VideoLikesOrDislikes" ToRole="Videos" />
         </EntityType>
         <EntityType Name="Video">
@@ -428,7 +432,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Subscribers">
-              <PropertyRef Name="SubsId" />
+              <PropertyRef Name="CreatorId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -526,6 +530,7 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CommentId" ColumnName="CommentId" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="LikeOrDislike" ColumnName="LikeOrDislike" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -573,7 +578,7 @@
               <MappingFragment StoreEntitySet="Subscribers">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CreatorId" ColumnName="CreatorId" />
-                <ScalarProperty Name="SubsId" ColumnName="SubsId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -599,6 +604,7 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="VideoId" ColumnName="VideoId" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="LikeOrDislike" ColumnName="LikeOrDislike" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

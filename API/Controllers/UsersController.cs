@@ -17,6 +17,31 @@ namespace API.Controllers
     {
         private YoutubeCloneEntities db = new YoutubeCloneEntities();
 
+        [HttpPost]
+        [Authorize]
+        public async Task<string> Subscribe(int creatorId)
+        {
+            Subscriber subscriber = new Subscriber
+            {
+                CreatorId = creatorId,
+                Username = User.Identity.Name
+            };
+            db.Subscribers.Add(subscriber);
+            await db.SaveChangesAsync();
+            return "success";
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<string> Unsubscribe(int creatorId)
+        {
+            Subscriber sub = db.Subscribers.Where(x => x.CreatorId == creatorId && x.Username == User.Identity.Name).FirstOrDefault();
+            db.Subscribers.Remove(sub);
+            await db.SaveChangesAsync();
+            return "success";
+        }
+
+
         // GET: Users
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Index()
@@ -79,30 +104,22 @@ namespace API.Controllers
         [Authorize]
         // GET: Users/Details/5
         public async Task<ActionResult> Details(int? id)
-        {            
-            if (User.IsInRole("Admin"))
-            {
-                if (id == null)
-                {
-                    id = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Id;
-                }
-                User user = await db.Users.FindAsync(id);
-                if (user == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(user);
-            }
-            else
+        {
+            if (id == null)
             {
                 id = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().Id;
-                User user = await db.Users.FindAsync(id);
-                if (user == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(user);
             }
+            User user = await db.Users.FindAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            UserSubs userSubs = new UserSubs
+            {
+                user = user,
+                subscribers = db.Subscribers.Where(x => x.CreatorId == user.Id).ToList()
+            };
+            return View(userSubs);
 
         }
 
@@ -241,6 +258,11 @@ namespace API.Controllers
         {
             User user = await db.Users.FindAsync(id);
             db.Users.Remove(user);
+            foreach (var item in db.Subscribers.Where(x => x.Username == user.Username).ToList())
+            {
+                db.Subscribers.Remove(item);
+            }
+            
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
