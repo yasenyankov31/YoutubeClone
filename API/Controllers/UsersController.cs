@@ -26,6 +26,7 @@ namespace API.Controllers
                 CreatorId = creatorId,
                 Username = User.Identity.Name
             };
+            db.Users.Find(creatorId).Subscribers++;
             db.Subscribers.Add(subscriber);
             await db.SaveChangesAsync();
             return "success";
@@ -37,6 +38,7 @@ namespace API.Controllers
         {
             Subscriber sub = db.Subscribers.Where(x => x.CreatorId == creatorId && x.Username == User.Identity.Name).FirstOrDefault();
             db.Subscribers.Remove(sub);
+            db.Users.Find(creatorId).Subscribers--;
             await db.SaveChangesAsync();
             return "success";
         }

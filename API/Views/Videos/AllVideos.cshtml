@@ -24,8 +24,11 @@
                             <p>@item.CreatorName</p>
                             <p>@item.Views Views</p>
                         </div>
-                        
-                        <div id="date">@item.DateCreated.ToString("dd M yyyy H mm ss")</div>
+                        @{
+                            TimeSpan tsElapsed = DateTime.Now - item.DateCreated;
+                            <div id="date">@Math.Round(tsElapsed.TotalSeconds)</div>
+                        }
+
                     </div>
 
                 </div>
@@ -39,23 +42,17 @@
 <script>
     
     $("div #date").get().forEach((element) => {
-        const todayDate = new Date()
-        var dateString = element.innerHTML.split(" ");
-        var startDate = new Date(dateString[2], dateString[1], dateString[0], dateString[3], dateString[4], dateString[5]);
-        var endDate = new Date(todayDate.getFullYear(), todayDate.getMonth() + 1, todayDate.getDate(), todayDate.getHours(), todayDate.getMinutes(), todayDate.getSeconds())
-        var seconds = Math.abs(Math.round((endDate.getTime() - startDate.getTime()) / 1000));
-
+        var seconds = element.innerHTML;
         var minute = Math.round(seconds / 60);
         var hour = Math.round(seconds / 3600);
         var day = Math.round(seconds / 86400);
         var month = Math.round(seconds / 2630000);
         var year = Math.round(seconds / 31556926);
-
         if (seconds > 60) {
-            if (year>0) {
+            if (year > 0) {
                 element.innerHTML = year + " years ago";
             }
-            else if (month>0) {
+            else if (month > 0) {
                 element.innerHTML = month + " months ago";
             }
             else if (day > 0) {
@@ -67,7 +64,6 @@
             else {
                 element.innerHTML = minute + " minutes ago";
             }
-
         }
         else {
             element.innerHTML = seconds + " seconds ago";

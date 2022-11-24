@@ -266,11 +266,13 @@ namespace API.Controllers
             await db.SaveChangesAsync();
             List<Comment> comments = await db.Comments.Where(x=>x.VideoId==video.Id).ToListAsync();
             List<VideoLikesOrDislike> videold = await db.VideoLikesOrDislikes.Where(x => x.VideoId == video.Id).ToListAsync();
+            User user = db.Users.Where(x => x.Id == video.CreatorId).FirstOrDefault();
             VideoInfo videoAndComments = new VideoInfo
             {
                 comments = comments,
                 video=video,
-                videold= videold
+                videold= videold,
+                ContentCreator= user
             };
             ViewBag.isSubed = "";
             if (db.Subscribers.Where(x => x.Username == User.Identity.Name).FirstOrDefault()!=null)
