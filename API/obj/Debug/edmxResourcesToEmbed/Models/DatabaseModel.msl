@@ -26,30 +26,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Replies">
-      <EntityTypeMapping TypeName="YoutubeCloneModel.Reply">
-        <MappingFragment StoreEntitySet="Replies">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="CommentId" ColumnName="CommentId" />
-          <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
-          <ScalarProperty Name="Username" ColumnName="Username" />
-          <ScalarProperty Name="Likes" ColumnName="Likes" />
-          <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
-          <ScalarProperty Name="Edited" ColumnName="Edited" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="ProfilePictureUrl" ColumnName="ProfilePictureUrl" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ReplyLikesOrDislikes">
-      <EntityTypeMapping TypeName="YoutubeCloneModel.ReplyLikesOrDislike">
-        <MappingFragment StoreEntitySet="ReplyLikesOrDislikes">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="ReplyId" ColumnName="ReplyId" />
-          <ScalarProperty Name="Username" ColumnName="Username" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Subscribers">
       <EntityTypeMapping TypeName="YoutubeCloneModel.Subscriber">
         <MappingFragment StoreEntitySet="Subscribers">

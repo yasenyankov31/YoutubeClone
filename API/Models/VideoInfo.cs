@@ -10,7 +10,6 @@ namespace API.Models
         public Video video { get; set; }
         public List<Comment> comments { get; set; }
         public List<VideoLikesOrDislike> videold { get; set; }
-
         public User ContentCreator { get; set; }
     }
 }

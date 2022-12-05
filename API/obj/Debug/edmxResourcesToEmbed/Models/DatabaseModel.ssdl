@@ -20,30 +20,8 @@
     <Property Name="Likes" Type="int" Nullable="false" />
     <Property Name="Dislikes" Type="int" Nullable="false" />
     <Property Name="Edited" Type="bit" Nullable="false" />
-    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
     <Property Name="ProfilePictureUrl" Type="nvarchar" MaxLength="200" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Replies">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="CommentId" Type="int" Nullable="false" />
-    <Property Name="CommentContent" Type="nvarchar" MaxLength="200" Nullable="false" />
-    <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
-    <Property Name="Likes" Type="int" Nullable="false" />
-    <Property Name="Dislikes" Type="int" Nullable="false" />
-    <Property Name="Edited" Type="bit" Nullable="false" />
-    <Property Name="Date" Type="date" Nullable="false" />
-    <Property Name="ProfilePictureUrl" Type="nvarchar" MaxLength="200" Nullable="false" />
-  </EntityType>
-  <EntityType Name="ReplyLikesOrDislikes">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="ReplyId" Type="int" Nullable="false" />
-    <Property Name="Username" Type="nvarchar" MaxLength="200" Nullable="false" />
   </EntityType>
   <EntityType Name="Subscribers">
     <Key>
@@ -136,34 +114,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Replies_Comments">
-    <End Role="Comments" Type="Self.Comments" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="Replies" Type="Self.Replies" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Comments">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Replies">
-        <PropertyRef Name="CommentId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ReplyLikesOrDislikes_Replies">
-    <End Role="Replies" Type="Self.Replies" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="ReplyLikesOrDislikes" Type="Self.ReplyLikesOrDislikes" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Replies">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="ReplyLikesOrDislikes">
-        <PropertyRef Name="ReplyId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Subscribers_Users">
     <End Role="Users" Type="Self.Users" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -207,8 +157,6 @@
   <EntityContainer Name="YoutubeCloneModelStoreContainer">
     <EntitySet Name="CommentLikesOrDislikes" EntityType="Self.CommentLikesOrDislikes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="Replies" EntityType="Self.Replies" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ReplyLikesOrDislikes" EntityType="Self.ReplyLikesOrDislikes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Subscribers" EntityType="Self.Subscribers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="VideoLikesOrDislikes" EntityType="Self.VideoLikesOrDislikes" Schema="dbo" store:Type="Tables" />
@@ -224,14 +172,6 @@
     <AssociationSet Name="FK_LikesOrDislikes_Videos" Association="Self.FK_LikesOrDislikes_Videos">
       <End Role="Videos" EntitySet="Videos" />
       <End Role="VideoLikesOrDislikes" EntitySet="VideoLikesOrDislikes" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Replies_Comments" Association="Self.FK_Replies_Comments">
-      <End Role="Comments" EntitySet="Comments" />
-      <End Role="Replies" EntitySet="Replies" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ReplyLikesOrDislikes_Replies" Association="Self.FK_ReplyLikesOrDislikes_Replies">
-      <End Role="Replies" EntitySet="Replies" />
-      <End Role="ReplyLikesOrDislikes" EntitySet="ReplyLikesOrDislikes" />
     </AssociationSet>
     <AssociationSet Name="FK_Subscribers_Users" Association="Self.FK_Subscribers_Users">
       <End Role="Users" EntitySet="Users" />
