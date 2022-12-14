@@ -162,7 +162,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RepliesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VideosController.cs" />
     <Compile Include="Global.asax.cs">
@@ -188,6 +190,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Reply.cs">
+      <DependentUpon>DatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ReplyLikesOrDislike.cs">
+      <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Subscriber.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
@@ -258,7 +266,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <Content Include="Scripts\allVideos.js" />
+    <Content Include="Scripts\WebsiteScripts\allVideos.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -273,16 +281,16 @@
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
-    <Content Include="Scripts\createUser.js" />
-    <Content Include="Scripts\createVideo.js" />
-    <Content Include="Scripts\detailsVideo.js" />
-    <Content Include="Scripts\editUser.js" />
-    <Content Include="Scripts\editVideo.js" />
+    <Content Include="Scripts\WebsiteScripts\createUser.js" />
+    <Content Include="Scripts\WebsiteScripts\createVideo.js" />
+    <Content Include="Scripts\WebsiteScripts\detailsVideo.js" />
+    <Content Include="Scripts\WebsiteScripts\editUser.js" />
+    <Content Include="Scripts\WebsiteScripts\editVideo.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.js" />
-    <Content Include="Scripts\Subs.js" />
+    <Content Include="Scripts\WebsiteScripts\Subs.js" />
     <Content Include="VideoFiles\oPr3yl6bsw.mp4" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

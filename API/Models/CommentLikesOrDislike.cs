@@ -16,6 +16,7 @@ namespace API.Models
     {
         public int Id { get; set; }
         public int CommentId { get; set; }
+        public int Videoid { get; set; }
         public string Username { get; set; }
         public bool LikeOrDislike { get; set; }
     

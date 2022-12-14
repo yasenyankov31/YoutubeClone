@@ -18,6 +18,7 @@ namespace API.Models
         public Comment()
         {
             this.CommentLikesOrDislikes = new HashSet<CommentLikesOrDislike>();
+            this.Replies = new HashSet<Reply>();
         }
     
         public int Id { get; set; }
@@ -33,5 +34,7 @@ namespace API.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommentLikesOrDislike> CommentLikesOrDislikes { get; set; }
         public virtual Video Video { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Reply> Replies { get; set; }
     }
 }

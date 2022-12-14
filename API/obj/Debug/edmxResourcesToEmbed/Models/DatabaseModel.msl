@@ -6,6 +6,7 @@
         <MappingFragment StoreEntitySet="CommentLikesOrDislikes">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+          <ScalarProperty Name="Videoid" ColumnName="Videoid" />
           <ScalarProperty Name="Username" ColumnName="Username" />
           <ScalarProperty Name="LikeOrDislike" ColumnName="LikeOrDislike" />
         </MappingFragment>
@@ -23,6 +24,33 @@
           <ScalarProperty Name="Edited" ColumnName="Edited" />
           <ScalarProperty Name="Date" ColumnName="Date" />
           <ScalarProperty Name="ProfilePictureUrl" ColumnName="ProfilePictureUrl" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Replies">
+      <EntityTypeMapping TypeName="YoutubeCloneModel.Reply">
+        <MappingFragment StoreEntitySet="Replies">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+          <ScalarProperty Name="VideoId" ColumnName="VideoId" />
+          <ScalarProperty Name="ReplyContent" ColumnName="ReplyContent" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Likes" ColumnName="Likes" />
+          <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
+          <ScalarProperty Name="Edited" ColumnName="Edited" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="ProfilePictureUrl" ColumnName="ProfilePictureUrl" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReplyLikesOrDislikes">
+      <EntityTypeMapping TypeName="YoutubeCloneModel.ReplyLikesOrDislike">
+        <MappingFragment StoreEntitySet="ReplyLikesOrDislikes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ReplyId" ColumnName="ReplyId" />
+          <ScalarProperty Name="Videoid" ColumnName="Videoid" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="LikeOrDislike" ColumnName="LikeOrDislike" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

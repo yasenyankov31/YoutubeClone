@@ -4,15 +4,19 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="cf3458b2a50740fa8e19309d808769e3" Name="Diagram1">
-        <EntityTypeShape EntityType="YoutubeCloneModel.CommentLikesOrDislike" Width="1.5" PointX="7.5" PointY="4.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="YoutubeCloneModel.Comment" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="YoutubeCloneModel.Subscriber" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="YoutubeCloneModel.User" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="YoutubeCloneModel.VideoLikesOrDislike" Width="1.5" PointX="5.25" PointY="7.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="YoutubeCloneModel.Video" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
+      <Diagram DiagramId="68775b36e6b34b218745e5aa4c722aec" Name="Diagram1">
+        <EntityTypeShape EntityType="YoutubeCloneModel.CommentLikesOrDislike" Width="1.5" PointX="7.5" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.Comment" Width="1.5" PointX="5.25" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.Reply" Width="1.5" PointX="7.5" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.ReplyLikesOrDislike" Width="1.5" PointX="9.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.Subscriber" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.User" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.VideoLikesOrDislike" Width="1.5" PointX="5.25" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="YoutubeCloneModel.Video" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
         <AssociationConnector Association="YoutubeCloneModel.FK_CommentLikesOrDislikes_Comments" ManuallyRouted="false" />
         <AssociationConnector Association="YoutubeCloneModel.FK_Comments_Videos" ManuallyRouted="false" />
+        <AssociationConnector Association="YoutubeCloneModel.FK_Replies_Comments" ManuallyRouted="false" />
+        <AssociationConnector Association="YoutubeCloneModel.FK_ReplyLikesOrDislikes_Replies" ManuallyRouted="false" />
         <AssociationConnector Association="YoutubeCloneModel.FK_Subscribers_Users" ManuallyRouted="false" />
         <AssociationConnector Association="YoutubeCloneModel.FK_Videos_Users" ManuallyRouted="false" />
         <AssociationConnector Association="YoutubeCloneModel.FK_LikesOrDislikes_Videos" ManuallyRouted="false" />

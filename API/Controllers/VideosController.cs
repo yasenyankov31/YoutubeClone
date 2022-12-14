@@ -51,7 +51,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<string> RemoveLike(int videoId)
+        public async Task<string> RemoveLikeVideo(int videoId)
         {
             Video video = await db.Videos.FindAsync(videoId);
             video.Likes--;
@@ -93,7 +93,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<string> RemoveDislike(int videoId)
+        public async Task<string> RemoveDislikeVideo(int videoId)
         {
             Video video = await db.Videos.FindAsync(videoId);
             video.Dislikes--;
@@ -101,63 +101,6 @@ namespace API.Controllers
             VideoLikesOrDislike videoLikes = db.VideoLikesOrDislikes.Where(x => x.Username == User.Identity.Name && x.VideoId == videoId && !x.LikeOrDislike).FirstOrDefault();
             db.VideoLikesOrDislikes.Remove(videoLikes);
             await db.SaveChangesAsync();
-
-            return "success";
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<string> CreateComment(int videoId,string content)
-        {
-            User user = db.Users.Where(x => x.Username == User.Identity.Name).First();
-            Comment comment = new Comment
-            {
-                VideoId = videoId,
-                CommentContent=content,
-                Username=user.Username,
-                ProfilePictureUrl=user.ProfilePictureURL,
-                Date=DateTime.Now
-            };
-            db.Comments.Add(comment);
-            await db.SaveChangesAsync();
-
-            return "success";
-        }
-        [HttpPost]
-        [Authorize]
-        public async Task<string> DeleteComment(int videoId)
-        {
-            Comment comment = await db.Comments.Where(x=>x.VideoId==videoId).FirstOrDefaultAsync();
-            try
-            {
-                db.Comments.Remove(comment);
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-
-                return "error"+ex;
-            }
-
-            return "success";
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<string> EditComment(int videoId,string newcomment)
-        {
-            Comment comment = await db.Comments.Where(x => x.VideoId == videoId).FirstOrDefaultAsync();
-            comment.CommentContent = newcomment;
-            try
-            {
-                db.Entry(comment).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-
-                return "error" + ex;
-            }
 
             return "success";
         }
@@ -206,11 +149,11 @@ namespace API.Controllers
                 Description = HttpUtility.UrlDecode(description).Replace("script", "sсript"),
                 ThumbnailURL = SaveFile(thumbnail),
                 VideoURL = fileName,
-                DateCreated=DateTime.Now,
-                CreatorPhotoUrl=CreatorInfo.ProfilePictureURL,
-                CreatorName=CreatorInfo.Username
+                DateCreated = DateTime.Now,
+                CreatorPhotoUrl = CreatorInfo.ProfilePictureURL,
+                CreatorName = CreatorInfo.Username
             };
-            
+
             db.Videos.Add(video);
             await db.SaveChangesAsync();
             return "success";
@@ -247,7 +190,7 @@ namespace API.Controllers
             var videos = db.Videos.Where(x => x.CreatorId == UserId);
             return View(await videos.ToListAsync());
         }
- 
+
         // GET: Videos/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -263,28 +206,27 @@ namespace API.Controllers
             {
                 ViewBag.ProfileUrl = db.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefault().ProfilePictureURL;
             }
-            
+
             Video video = await db.Videos.FindAsync(id);
             video.Views += 1;
             db.Entry(video).State = EntityState.Modified;
             await db.SaveChangesAsync();
-            List<Comment> comments = await db.Comments.Where(x=>x.VideoId==video.Id).ToListAsync();
-            List<VideoLikesOrDislike> videold = await db.VideoLikesOrDislikes.Where(x => x.VideoId == video.Id).ToListAsync();
-            User user = db.Users.Where(x => x.Id == video.CreatorId).FirstOrDefault();
             VideoInfo videoAndComments = new VideoInfo
             {
-                comments = comments,
-                video=video,
-                videold= videold,
-                ContentCreator= user
+                comments = await db.Comments.Where(x => x.VideoId == video.Id).ToListAsync(),
+                video = video,
+                videolikes = await db.VideoLikesOrDislikes.Where(x => x.VideoId == video.Id).ToListAsync(),
+                ContentCreator = db.Users.Where(x => x.Id == video.CreatorId).FirstOrDefault(),
+                commentlikes = await db.CommentLikesOrDislikes.Where(x => x.Videoid == video.Id).ToListAsync(),
+                replies = await db.Replies.Where(x => x.VideoId == video.Id).ToListAsync()
             };
             ViewBag.isSubed = "";
-            if (db.Subscribers.Where(x => x.Username == User.Identity.Name).FirstOrDefault()!=null)
+            if (db.Subscribers.Where(x => x.Username == User.Identity.Name).FirstOrDefault() != null)
             {
-                ViewBag.isSubed ="full";
+                ViewBag.isSubed = "full";
             }
-           
-            
+
+
             if (video == null)
             {
                 return HttpNotFound();
@@ -302,9 +244,9 @@ namespace API.Controllers
 
             return View(await db.Videos.ToListAsync());
         }
-        
 
-       [Authorize]
+
+        [Authorize]
         // GET: Videos/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {

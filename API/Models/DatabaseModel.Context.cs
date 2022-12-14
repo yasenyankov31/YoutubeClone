@@ -27,6 +27,8 @@ namespace API.Models
     
         public virtual DbSet<CommentLikesOrDislike> CommentLikesOrDislikes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Reply> Replies { get; set; }
+        public virtual DbSet<ReplyLikesOrDislike> ReplyLikesOrDislikes { get; set; }
         public virtual DbSet<Subscriber> Subscribers { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<VideoLikesOrDislike> VideoLikesOrDislikes { get; set; }
